@@ -1,10 +1,10 @@
 # google calendar on kindle screensaver
 
-based on a lot of posts from hackaday, particularly this one: 
-
-    http://hackaday.com/2013/08/28/kindle-hack-ads-value-to-the-wallpaper/
+based on a lot of posts from hackaday, particularly this one: http://hackaday.com/2013/08/28/kindle-hack-ads-value-to-the-wallpaper/
 
 # requirements
+
+A kindle and a server.
 
 ## kindle
 
@@ -13,7 +13,7 @@ see above link for these:
 * jail broken kindle
 * screen saver hack 
 
-then install the fetch.sh to /mnt/us/fetch.sh, make executable and make a crontab to run it now and then.
+then install the fetch.sh to /mnt/us/fetch.sh, make executable and make a crontab to run it now and then. You'll also need to edit fetch.sh to use the correct ip/address of your server.
 
 ## server
 
@@ -24,16 +24,19 @@ on the server you'll need PIL with truetype enabled and the google api stuff.
 * apt-get install libfreetype6-dev
 * apt-get install python-imaging
 
-### Google api
+### Google api & oauth2
 
 * sudo pip install --upgrade google-api-python-client
 
-You'll have to first create a client.py file with your id and secret in it. These come from the google api manager.
+First go to google's api console: https://code.google.com/apis/console and create a new project with calendar access enabled. Copy your id and secret to a new file called client.py:
 
-Then look at getEvents.py, in auth() you'll have to first uncomment the part that gives you the redirect url, fetch a code and then uncomment the next part to turn the code into a token that is stored locally. 
+    client_id='xxx'
+    client_secret='xxx'
+
+Then edit getEvents.py. In auth() you'll have to first uncomment the part that gives you the redirect url, fetch a code and then uncomment the next part to turn the code into a token that is stored locally. Recomment the parts after use!
 
 If that works, then when you run getEvents.py it will return you your events for the next 7 days.
 
 # kindlefeed.py
 
-Then run the kindlefeed.py, it will start listening on port 8000 and when you make a request will render the events as a kindle sized png.
+Now run the kindlefeed.py, it will first render test.png with your events in it. Then it starts listening on port 8000 and when you make a request will render the events as a kindle sized png.
