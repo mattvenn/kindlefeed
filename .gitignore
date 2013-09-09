@@ -1,0 +1,5 @@
+a_credentials_file
+client.py
+trellokeys.py
+*.pyc
+*.ttf
