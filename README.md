@@ -41,6 +41,8 @@ If that works, then when you run getEvents.py it will return you your events for
 
 ### trello
 
+Install with pip install py-trello
+
 First get an api key from trello: https://trello.com/1/appKey/generate
 
 I couldn't get oauth to work properly, so only using the api key and the oauth token. Get the oauth token with the oauth_util.py
