@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import getEvents
+import fetch_tasks
 import time
 from random import randint
 import SocketServer
@@ -51,15 +52,33 @@ def make_new_date_image():
     line_height = textsize[1]
     l_margin = 20
     s_height = 20
-    draw.text([l_margin,s_height],events['from'], font=font, fill="black")
+    draw.text([l_margin,s_height],'Calendar:', font=font, fill="black")
     s_height += line_height
-    draw.text([l_margin,s_height],events['to'], font=font, fill="black")
-    s_height += line_height
-    draw.text([l_margin,s_height],'----', font=font, fill="black")
-    s_height += line_height
+    #events
     for event in events["events"]:
         draw.text([l_margin,s_height],event['start'] + ' ' + event['summary'], font=font, fill="black")
         s_height += line_height
+
+    draw.text([l_margin,s_height],'----', font=font, fill="black")
+    s_height += line_height
+    draw.text([l_margin,s_height],'Todo:', font=font, fill="black")
+    s_height += line_height
+
+    #tasks
+    trello = fetch_tasks.auth()
+    for task in fetch_tasks.get_tasks(trello,'To Do'):
+        draw.text([l_margin,s_height],task, font=font, fill="black")
+        s_height += line_height
+
+    draw.text([l_margin,s_height],'----', font=font, fill="black")
+    s_height += line_height
+    draw.text([l_margin,s_height],'Doing:', font=font, fill="black")
+    s_height += line_height
+
+    for task in fetch_tasks.get_tasks(trello,'Doing'):
+        draw.text([l_margin,s_height],task, font=font, fill="black")
+        s_height += line_height
+
     im.save("test.png", "PNG")
 
 #where we define what the server does
