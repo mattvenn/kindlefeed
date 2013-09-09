@@ -1,5 +1,6 @@
 import oauth2 as oauth
 import urlparse
+import trellokeys as keys
 
 def test_oauth():
 
@@ -7,8 +8,8 @@ def test_oauth():
     authorize_url = 'https://trello.com/1/OAuthAuthorizeToken'
     access_token_url = 'https://trello.com/1/OAuthGetAccessToken'
 
-    consumer_key = '63c6e2644b529b615959c88b08b1b2cd'
-    consumer_secret = '083b1f784763caba5e09f9c7b287f8667d709ae257fd6a2891e82db0e5ba2984'
+    consumer_key = keys.api_key
+    consumer_secret = keys.api_secret
 
     consumer = oauth.Consumer(consumer_key, consumer_secret)
     client = oauth.Client(consumer)
