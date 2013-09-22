@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+import datetime
 import getEvents
 import fetch_tasks
 import time
@@ -14,33 +15,16 @@ width = 600
 height = 800
 num_squares = 16
 bottom_height = 100
+title_fontsize = 30
 fontsize = 20
 
 #make sure this font is installed
 font_path = 'FreeMono.ttf'
+font = ImageFont.truetype(font_path, fontsize)
+title_font = ImageFont.truetype(font_path, title_fontsize)
+line_height = font.getsize('Aq')[1]
+title_height = title_font.getsize('Aq')[1]
 
-
-def make_new_squares_image():
-    im = Image.new("RGB", (width,height), "white")
-    draw = ImageDraw.Draw(im)
-
-    squares = zip(
-        range(0,width/2,width/2/num_squares),
-        range(0,height/2,height/2/num_squares),
-        range(1,255,100/num_squares))
-
-    for x,y,colour in squares:
-            coords=[x,y,width-x,height-y]
-            shade = randint(0,255)
-            colour=(shade,shade,shade)
-            draw.rectangle(coords,fill=colour)
-
-    font = ImageFont.truetype(font_path, fontsize)
-    draw.rectangle([0,height,width,height - bottom_height],fill="white")
-    text = time.ctime()
-    textsize = font.getsize(text)
-    draw.text([width/2-textsize[0]/2,height-bottom_height/2-textsize[1]/2],text, font=font, fill="black")
-    im.save("test.png", "PNG")
 
 def make_new_date_image():
     im = Image.new("RGB", (width,height), "white")
@@ -48,21 +32,19 @@ def make_new_date_image():
     events = getEvents.get_all()
     font = ImageFont.truetype(font_path, fontsize)
     text = events['from']
-    textsize = font.getsize(text)
-    line_height = textsize[1]
     l_margin = 20
     s_height = 20
-    draw.text([l_margin,s_height],'Calendar:', font=font, fill="black")
-    s_height += line_height
+    draw.text([l_margin,s_height],'Calendar', font=title_font, fill="black")
+    s_height += title_height
     #events
     for event in events["events"]:
-        draw.text([l_margin,s_height],event['start'] + ' ' + event['summary'], font=font, fill="black")
+        start_str = datetime.datetime.strftime(event['start'],'%a %H:%M')
+        draw.text([l_margin,s_height],start_str + ' ' + event['summary'], font=font, fill="black")
         s_height += line_height
 
-    draw.text([l_margin,s_height],'----', font=font, fill="black")
     s_height += line_height
-    draw.text([l_margin,s_height],'Todo:', font=font, fill="black")
-    s_height += line_height
+    draw.text([l_margin,s_height],'Todo', font=title_font, fill="black")
+    s_height += title_height
 
     #tasks
     trello = fetch_tasks.auth()
@@ -70,10 +52,9 @@ def make_new_date_image():
         draw.text([l_margin,s_height],task, font=font, fill="black")
         s_height += line_height
 
-    draw.text([l_margin,s_height],'----', font=font, fill="black")
     s_height += line_height
-    draw.text([l_margin,s_height],'Doing:', font=font, fill="black")
-    s_height += line_height
+    draw.text([l_margin,s_height],'Doing', font=title_font, fill="black")
+    s_height += title_height
 
     for task in fetch_tasks.get_tasks(trello,'Doing'):
         draw.text([l_margin,s_height],task, font=font, fill="black")

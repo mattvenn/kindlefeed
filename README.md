@@ -8,6 +8,10 @@ now with trello todo lists
 
 A kindle and a server.
 
+# todo
+
+We should generate the doc with html and then convert?
+
 ## kindle
 
 see above link for these:

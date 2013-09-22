@@ -28,7 +28,7 @@ def auth():
     credentials = storage.get()
     return credentials
 
-def fetch(credentials):
+def fetch(credentials,calendar_id):
     #print credentials
     ret = {}
 
@@ -45,7 +45,9 @@ def fetch(credentials):
     ret['events'] = []
 
     #make the request
-    request = service.events().list(calendarId='primary',timeMax=to_time,timeMin=from_time,singleEvents=True,maxResults=10,orderBy='startTime')
+	
+    request = service.events().list(calendarId=calendar_id,timeMax=to_time,timeMin=from_time,singleEvents=True,maxResults=10,orderBy='startTime')
+    #request = service.events().list(calendarId='primary',timeMax=to_time,timeMin=from_time,singleEvents=True,maxResults=10,orderBy='startTime')
     response = request.execute()
     for event in response.get('items', []):
         #chuck timezone
@@ -60,15 +62,22 @@ def fetch(credentials):
         else:
             #date problem
             continue
-        print start_time, event.get('summary')
-        ret['events'].append({'summary':event.get('summary'),'start':datetime.datetime.strftime(start_time,'%a %H:%M')})
+        #print start_time, event.get('summary')
+        summary = event.get('summary')
+        if summary == None:
+            summary = 'no summary'
+        ret['events'].append({'summary':summary,'start':start_time}) 
+        #datetime.datetime.strftime(start_time,'%a %H:%M'), 'datetime':start_time})
     return ret
 
 def get_all():
     creds = auth()
-    ret = fetch(creds)
-    return ret
+    #bit of a hack
+    primary = fetch(creds,'primary')
+    inma = fetch(creds,'inmapiquerasramos@gmail.com')
+    primary['events'] += inma['events']
+    primary['events'].sort()
+    return primary
 
 if __name__ == "__main__":
-    creds = auth()
-    ret = fetch(creds)
+    print get_all()
