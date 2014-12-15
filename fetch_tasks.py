@@ -1,10 +1,10 @@
 import trello
 import trellokeys as keys
 import ipdb
+import os
 
 def auth():
-    client = trello.TrelloClient(keys.api_key,keys.oauth_token)
-    #import ipdb; ipdb.set_trace()
+    client = trello.TrelloClient(keys.api_key,token=keys.oauth_token)
 
     #get all the boards
     boards = client.list_boards()
