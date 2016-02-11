@@ -42,6 +42,8 @@ Keys have to be put in trellokeys.py
 
 # kindlefeed.py
 
-Now run the kindlefeed.py, it will first render kindlefeed.png with your events in it. 
+    sudo cp kindlefeed.conf /etc/supervisor/conf.d
+    sudo supervisorctl reread
+    sudo supervisorctl update
 
-Then it starts listening on port 8000 and when you make a request will render the events as a kindle sized png.
+It starts listening on port 8000 and when you make a request will render the events as a kindle sized png.

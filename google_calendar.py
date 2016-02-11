@@ -57,16 +57,16 @@ class GoogleCalendar():
 
         self.credentials = credentials
 
-    def get_events(self):
+    def get_events(self, num_events=10):
         markdown = "# Calendar\n\n"
         credentials = self.credentials
         http = credentials.authorize(httplib2.Http())
         service = discovery.build('calendar', 'v3', http=http)
 
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-        log.info('getting the upcoming 5 events')
+        log.info('getting the upcoming %d events' % num_events)
         eventsResult = service.events().list(
-            calendarId='primary', timeMin=now, maxResults=5, singleEvents=True,
+            calendarId='primary', timeMin=now, maxResults=num_events, singleEvents=True,
             orderBy='startTime').execute()
         events = eventsResult.get('items', [])
 
