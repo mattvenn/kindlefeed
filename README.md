@@ -21,6 +21,7 @@ and make executable. You'll also need to edit fetch.sh to use the correct ip/add
 ## server
 
 install requirements with pip -r python-requirements.txt
+install pandoc - might well require xelatex, can't remember!
 
 ### calendar
 
@@ -41,6 +42,9 @@ I couldn't get oauth to work properly, so only using the api key and the oauth t
 Keys have to be put in trellokeys.py
 
 # kindlefeed.py
+
+I use supervisord, if you do, edit kindlefeed.com (I'm also using a virtualenv
+for Python packages), then:
 
     sudo cp kindlefeed.conf /etc/supervisor/conf.d
     sudo supervisorctl reread
