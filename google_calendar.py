@@ -1,4 +1,5 @@
 from __future__ import print_function
+import logging
 import httplib2
 import os
 
@@ -8,6 +9,7 @@ from oauth2client import client
 from oauth2client import tools
 
 import datetime
+log = logging.getLogger('')
 
 try:
     import argparse
@@ -62,7 +64,7 @@ class GoogleCalendar():
         service = discovery.build('calendar', 'v3', http=http)
 
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-        print('Getting the upcoming 5 events')
+        log.info('getting the upcoming 5 events')
         eventsResult = service.events().list(
             calendarId='primary', timeMin=now, maxResults=5, singleEvents=True,
             orderBy='startTime').execute()
@@ -70,6 +72,7 @@ class GoogleCalendar():
 
         if not events:
             markdown += "No upcoming events found.\n"
+            log.info("no events found")
         for event in events:
             start = event.get('start')
             if start.has_key('date'):
@@ -80,6 +83,7 @@ class GoogleCalendar():
                 start_time_str = event.get('start')['dateTime'].rsplit('+')[0]
                 start_time = datetime.datetime.strptime(start_time_str,'%Y-%m-%dT%H:%M:%SZ')
             else:
+                log.error("date issue")
                 #date problem
                 continue
             start_str = datetime.datetime.strftime(start_time,'%a %d %b %H:%M')

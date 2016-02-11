@@ -1,7 +1,8 @@
 from trello import TrelloClient
+import logging
 import trellokeys as keys
-import ipdb
-import os
+
+log = logging.getLogger('')
 
 class TrelloTasks():
     def __init__(self):
@@ -11,6 +12,7 @@ class TrelloTasks():
 
     #fetch all cards in a list
     def get_cards(self, board_name, list_name):
+        log.info("fetching list %s from board %s" % (list_name, board_name))
         board = filter(lambda x: x.name == board_name, self.boards)[0]
         list = filter(lambda x: x.name == list_name, board.all_lists())[0]
         cards = list.list_cards()
