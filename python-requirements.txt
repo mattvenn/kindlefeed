@@ -1,2 +1,3 @@
-pytrello
+py-trello
 google-api-python-client
+requests[security]
