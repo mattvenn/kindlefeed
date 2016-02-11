@@ -1,7 +1,12 @@
+#!/usr/bin/env python
+import SimpleHTTPServer, SocketServer
 from google_calendar import GoogleCalendar
 from trello_tasks import TrelloTasks
 import logging
 import os
+
+#what port to serve on
+port = 8000
 
 # setup logging
 log = logging.getLogger('')
@@ -11,13 +16,6 @@ ch.setFormatter(log_format)
 log.addHandler(ch)
 log.setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.WARNING)
-
-#what port to serve on
-port = 8000
-
-#width and height of kindle
-width = 600
-height = 800
 
 
 def aggregate_markdown():
@@ -40,6 +38,33 @@ def pandoc_to_png(markdown):
     os.system('convert -alpha off -density 200 kindlefeed.pdf kindlefeed.png')
 
 
+#where we define what the server does
+class getHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        #send the index.html page to the browser
+        log.info("got request")
+        self.send_response(200)
+        self.send_header('Content-type', 'image/png')
+        self.end_headers()
+
+        markdown = aggregate_markdown()
+        pandoc_to_png(markdown)
+
+        image_file = open("kindlefeed.png")
+        image = image_file.read()
+        self.wfile.write(image)
+        log.info("done")
+
+
 if __name__ == '__main__':
-    markdown = aggregate_markdown()
-    pandoc_to_png(markdown)
+    #start the server
+    try:
+        #this lines to allow socket reuse
+        SocketServer.TCPServer.allow_reuse_address = True
+        server = SocketServer.TCPServer(('',port), getHandler)
+        
+        logging.info("started serving on port %d" % port)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        logging.info("caught ^C - quitting")
+    server.socket.close()
