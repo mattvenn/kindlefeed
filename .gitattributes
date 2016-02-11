@@ -1,0 +1,2 @@
+trellokeys.py filter=git-crypt diff=git-crypt
+client_secret.json filter=git-crypt diff=git-crypt
