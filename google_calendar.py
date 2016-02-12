@@ -81,13 +81,24 @@ class GoogleCalendar():
             elif start.has_key('dateTime'):
                 start_time_str = start['dateTime']
                 start_time_str = event.get('start')['dateTime'].rsplit('+')[0]
-                start_time = datetime.datetime.strptime(start_time_str,'%Y-%m-%dT%H:%M:%SZ')
+                start_time = datetime.datetime.strptime(start_time_str,'%Y-%m-%dT%H:%M:%S')
             else:
                 log.error("date issue")
                 #date problem
                 continue
-            start_str = datetime.datetime.strftime(start_time,'%a %d %b %H:%M')
-            markdown += "* %s : %s\n" % (start_str, event['summary'])
+            delta = start_time - datetime.datetime.now()
+
+            # show time
+            if delta.days < 2:
+                if delta.days == 0:
+                    start_str = "today"
+                else:
+                    start_str = datetime.datetime.strftime(start_time,'%a')
+                start_str += " at " + datetime.datetime.strftime(start_time,'%H:%M')
+                
+            else:
+                start_str = "%d days" % delta.days
+            markdown += "* %s: %s\n" % (start_str, event['summary'])
 
         markdown += "\n"
         return markdown
