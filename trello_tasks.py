@@ -17,7 +17,7 @@ class TrelloTasks():
         list = filter(lambda x: x.name == list_name, board.all_lists())[0]
         cards = list.list_cards()
 
-        markdown = "# %s / %s\n\n" % (board_name, list_name)
+        markdown = "# %s / %s\n\n" % (board_name.capitalize(), list_name.capitalize())
 
         for card in cards:
             markdown += "* %s\n" % card.name

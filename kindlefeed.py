@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import datetime
 import SimpleHTTPServer, SocketServer
 from google_calendar import GoogleCalendar
 from trello_tasks import TrelloTasks
@@ -26,6 +27,10 @@ def aggregate_markdown():
     tt = TrelloTasks()
     markdown += tt.get_cards('tasks', 'Doing')
     markdown += tt.get_cards('valencia','matt')
+
+    now = datetime.datetime.now()
+    update_str = datetime.datetime.strftime(now,'### Updated %d/%m at %H:%M')
+    markdown += update_str
 
     return markdown
 
