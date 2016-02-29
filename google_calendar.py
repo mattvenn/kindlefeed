@@ -90,7 +90,7 @@ class GoogleCalendar():
 
             # show time
             if delta.days < 2:
-                if delta.days == 0:
+                if start_time.day == datetime.datetime.now().day:
                     start_str = "today"
                 else:
                     start_str = datetime.datetime.strftime(start_time,'%a')
